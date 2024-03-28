@@ -1,20 +1,24 @@
+import { AppRegistry } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import DayList from "@/screens/DayList";
+import DayEdit from "@/screens/DayEdit";
+import { RootStackParamList } from "@/types";
 
-export default function App() {
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>hiya!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="DayList">
+        <Stack.Screen name="DayList" component={DayList} />
+        <Stack.Screen name="DayEdit" component={DayEdit} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+AppRegistry.registerComponent("daycounterapp", () => App);
+
+export default App;
