@@ -3,4 +3,4 @@ export type RootStackParamList = {
   DayEdit: undefined;
 };
 
-export type CounterMode = "due" | "duration";
+export type CountingMode = "due" | "duration";
