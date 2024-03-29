@@ -1,15 +1,13 @@
 import { Button, StyleSheet, Text, View } from "react-native";
 import { CountingMode } from "@/types";
+import { memo } from "react";
 
 type Props = {
   currentMode: CountingMode;
   onChangeMode: (mode: CountingMode) => void;
 };
 
-export default function CountingModeSelection({
-  currentMode,
-  onChangeMode,
-}: Props) {
+function CountingModeSelection({ currentMode, onChangeMode }: Props) {
   return (
     <View>
       <Button
@@ -26,4 +24,4 @@ export default function CountingModeSelection({
   );
 }
 
-const styles = StyleSheet.create({});
+export default memo(CountingModeSelection);

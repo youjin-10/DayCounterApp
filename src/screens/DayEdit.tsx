@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { CountingMode } from "@/types";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs, { Dayjs } from "dayjs";
@@ -10,9 +10,9 @@ export default function DayEdit() {
   const [countingMode, setCountingMode] = useState<CountingMode>("due");
   const [date, setDate] = useState<Dayjs>(dayjs());
 
-  const handleModeChange = (mode: CountingMode) => {
+  const handleModeChange = useCallback((mode: CountingMode) => {
     setCountingMode(mode);
-  };
+  }, []);
 
   return (
     <View style={styles.container}>
