@@ -3,18 +3,24 @@ import { useState } from "react";
 import { CountingMode } from "@/types";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs, { Dayjs } from "dayjs";
+import CountingModeSelection from "@/components/CountingModeSelection";
+import DateDisplay from "@/components/DateDisplay";
 
 export default function DayEdit() {
   const [countingMode, setCountingMode] = useState<CountingMode>("due");
   const [date, setDate] = useState<Dayjs>(dayjs());
 
+  const handleModeChange = (mode: CountingMode) => {
+    setCountingMode(mode);
+  };
+
   return (
     <View style={styles.container}>
       <Text>DayEdit</Text>
-      <View>
-        <Button title="D-day" onPress={() => setCountingMode("due")} />
-        <Button title="D+" onPress={() => setCountingMode("duration")} />
-      </View>
+      <CountingModeSelection
+        currentMode={countingMode}
+        onChangeMode={handleModeChange}
+      />
       <View>
         <Text>Mode: {countingMode}</Text>
       </View>
@@ -26,29 +32,8 @@ export default function DayEdit() {
           onChange={(params) => setDate(dayjs(params.date))}
         />
       </View>
-      <View>
-        <Text>{date.format("YYYY-MM-DD")}</Text>
-        {/* if mode is 'due', it wil show how many days left from today until user's selected date */}
-        {countingMode === "due" && (
-          <View>
-            <Text>{date.diff(dayjs(), "day")} days left</Text>
-            <Text>D-{date.diff(dayjs(), "day")}</Text>
-          </View>
-        )}
 
-        {/* if mode is 'duration', it will show how many days have passed from user's selected date until today but if user's selected date is later than today then just show 0 */}
-        {countingMode === "duration" && (
-          <View>
-            <Text>
-              {dayjs().diff(date, "day") > 0 ? dayjs().diff(date, "day") : 0}{" "}
-              days passed
-            </Text>
-            <Text>
-              D+{dayjs().diff(date, "day") > 0 ? dayjs().diff(date, "day") : 0}
-            </Text>
-          </View>
-        )}
-      </View>
+      <DateDisplay countingMode={countingMode} selectedDate={date} />
       <View>
         <Button
           title="Save"
