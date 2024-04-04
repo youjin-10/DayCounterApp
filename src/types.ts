@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   DayList: undefined;
-  DayEdit: undefined;
+  DayEdit: { mode: CountingMode } | undefined;
 };
 
 export type CountingMode = "due" | "duration";
