@@ -1,13 +1,26 @@
 import { Button, StyleSheet, Text, View, Pressable } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BackdropModal from "@/components/ui/BackdropModal";
+import { useQuery } from "@realm/react";
+import { Event } from "@/data";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DayList">;
 
 export default function DayList({ navigation }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    console.log("DayList mounted");
+
+    return () => {
+      console.log("DayList unmounted");
+    };
+  }, []);
+
+  const events = useQuery(Event.schema.name);
+  console.log(events);
 
   return (
     <View style={styles.container}>

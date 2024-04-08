@@ -17,6 +17,8 @@ import CountingModeSelection from "@/components/CountingModeSelection";
 import DateDisplay from "@/components/DateDisplay";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/types";
+import { useRealm } from "@realm/react";
+import { Event } from "@/data";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DayEdit">;
 
@@ -34,9 +36,24 @@ export default function DayEdit({ navigation, route }: Props) {
   const currentMode = route.params?.mode ?? "due";
   const [date, setDate] = useState<Dayjs>(dayjs());
   const [eventTitle, setEventTitle] = useState<string>("");
+  const realm = useRealm();
 
   const handleTitleChange = (text: string) => {
     setEventTitle(text);
+  };
+
+  const handleSave = () => {
+    console.log(currentMode, date, eventTitle);
+
+    // TODO: error handling
+    realm.write(() => {
+      realm.create(
+        Event.schema.name,
+        Event.generate(currentMode, date.toISOString(), eventTitle)
+      );
+    });
+
+    navigation.navigate("DayList");
   };
 
   return (
@@ -75,16 +92,7 @@ export default function DayEdit({ navigation, route }: Props) {
       </KeyboardAvoidingView>
 
       <View>
-        <Button
-          disabled={!eventTitle}
-          title="Save"
-          onPress={() => {
-            // save the date to internal storage
-            // navigate back to DayList
-            // navigation.navigate("DayList");
-            console.log(currentMode, date, eventTitle);
-          }}
-        />
+        <Button disabled={!eventTitle} title="Save" onPress={handleSave} />
       </View>
     </View>
   );
