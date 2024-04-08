@@ -15,6 +15,10 @@ import DateTimePicker from "react-native-ui-datepicker";
 import dayjs, { Dayjs } from "dayjs";
 import CountingModeSelection from "@/components/CountingModeSelection";
 import DateDisplay from "@/components/DateDisplay";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@/types";
+
+type Props = NativeStackScreenProps<RootStackParamList, "DayEdit">;
 
 /**
  TODO
@@ -24,17 +28,12 @@ import DateDisplay from "@/components/DateDisplay";
     selectedDate: string; // ISO 8601 format
     title: string;
  }
-  
  */
 
-export default function DayEdit() {
-  const [countingMode, setCountingMode] = useState<CountingMode>("due");
+export default function DayEdit({ navigation, route }: Props) {
+  const currentMode = route.params?.mode ?? "due";
   const [date, setDate] = useState<Dayjs>(dayjs());
   const [eventTitle, setEventTitle] = useState<string>("");
-
-  const handleModeChange = useCallback((mode: CountingMode) => {
-    setCountingMode(mode);
-  }, []);
 
   const handleTitleChange = (text: string) => {
     setEventTitle(text);
@@ -63,30 +62,27 @@ export default function DayEdit() {
               />
             </View>
 
-            <CountingModeSelection
-              currentMode={countingMode}
-              onChangeMode={handleModeChange}
-            />
-
             <DateTimePicker
               mode="single"
-              minDate={countingMode === "due" ? dayjs().toDate() : null}
+              minDate={currentMode === "due" ? dayjs().toDate() : null}
               date={date}
               onChange={(params) => setDate(dayjs(params.date))}
             />
 
-            <DateDisplay countingMode={countingMode} selectedDate={date} />
+            <DateDisplay countingMode={currentMode} selectedDate={date} />
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
 
       <View>
         <Button
+          disabled={!eventTitle}
           title="Save"
           onPress={() => {
             // save the date to internal storage
             // navigate back to DayList
             // navigation.navigate("DayList");
+            console.log(currentMode, date, eventTitle);
           }}
         />
       </View>
